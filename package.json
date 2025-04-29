@@ -1,0 +1,17 @@
+{
+    "name": "another_notion",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "keywords": [],
+    "author": "YZU Agile TeamB",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^36.0.0"
+    },
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc -w",
+        "start": "npm run build && electron ./dist/index.js"
+    }
+}
