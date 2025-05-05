@@ -1,7 +1,7 @@
 import { RecentlyController } from "../src/backend/controller/RecentlyEditedController";
 import { NoteDataModel } from "../src/backend/model/NoteDataModel";
 
-jest.mock("../model/NoteDataModel", () => {
+jest.mock("../src/backend/model/NoteDataModel", () => {
   class MockNoteDataModel {
     private notes: Record<number, OtherDataInfo> = {
       0: {
