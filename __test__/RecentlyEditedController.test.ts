@@ -1,5 +1,5 @@
-import { RecentlyController } from "./RecentlyEditedController";
-import { NoteDataModel } from "../model/NoteDataModel";
+import { RecentlyController } from "../src/backend/controller/RecentlyEditedController";
+import { NoteDataModel } from "../src/backend/model/NoteDataModel";
 
 jest.mock("../model/NoteDataModel", () => {
   class MockNoteDataModel {
