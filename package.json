@@ -18,5 +18,8 @@
         "test": "jest",
         "test-watch": "jest --watchAll",
         "start": "npm run build && electron ./dist/index.js"
+    },
+    "dependencies": {
+        "uuid": "^11.1.0"
     }
 }

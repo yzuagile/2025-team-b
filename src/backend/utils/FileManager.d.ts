@@ -8,7 +8,7 @@ declare class FileManager {
 
     /**
      * read data in a file async
-     * @param fileName file name with .json
+     * @param fileName file name with .json, the name should be UUID.json
      * @param content Object with json type
      */
     static read(fileName: string): Promise<string>;
