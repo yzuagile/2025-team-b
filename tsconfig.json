@@ -11,5 +11,5 @@
     },
     "include": [
         "src/**/*"
-    ]
+, "__test__/RecentlyEditedController.test.ts"    ]
 }
