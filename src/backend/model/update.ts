@@ -4,8 +4,12 @@ import * as FileManager from "../utils/FileManager"
 import * as fs from "fs";
 import * as path from "path";
 
-function updateTimeStamp(uuid: string) {
-    const filePath = path.join(FileManager.FileManager._PATH, `${uuid}.json`);
-    let note = FileManager.FileManager.read(filePath);
-    // ... promise 還不會寫
+export async function updateTimeStamp(uuid: string) {
+
+    const fileName = `${uuid}.json`
+    let note = await FileManager.FileManager.read(fileName);
+
+
+    note.last_edit_time = Date.now();
+    await FileManager.FileManager.write(fileName, note);
 }

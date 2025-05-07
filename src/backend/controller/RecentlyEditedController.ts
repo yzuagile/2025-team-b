@@ -1,18 +1,18 @@
-import { NoteDataModel } from "../model/NoteDataModel";
+import {updateTimeStamp} from '../model/update';
+import { getAllNotes } from '../model/get';
+import { Note } from '../interfaces/NoteStructure';
 
 export class RecentlyController{
 
-    private DataModel:NoteDataModel;
 
     constructor(){
-        // 用 mock 的方式先模擬 data model 的資料
-        this.DataModel = new NoteDataModel();
+
     }
 
-    public updateEditedNote(note_id:number):void{
+    public async updateEditedNote(uuid:string):Promise<void>{
 
         try{
-            this.DataModel.updateNoteTimestamp(note_id);
+            await updateTimeStamp(uuid);
         }
         catch (err){
             
@@ -20,17 +20,14 @@ export class RecentlyController{
         }
     }
 
-    public getRecentlyEditedNotes(): string[] {
+    public async getRecentlyEditedNotes(): Promise<Note[]> {
         /*
-        * 回傳排序最近使用時間（由近到久）後的 檔案名稱
+        * 回傳排序最近使用時間（由近到久）後的 Note
         */ 
 
-        const notes = this.DataModel.getAllNotes();
-        
-        const sortedNotesByTime = Object.values(notes).sort((a, b) => {
-            return b.last_edit_time - a.last_edit_time;
-        });
-        
-        return sortedNotesByTime.map(note => note.content_file_name)
+        const notes = await getAllNotes();
+        const sortedNotesByTime = notes.sort((a, b) => b.last_edit_time - a.last_edit_time);
+        return sortedNotesByTime;
+
     }
 }

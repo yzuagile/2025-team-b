@@ -1,79 +1,52 @@
+jest.mock("../src/backend/utils/FileManager");
+
+
 import { RecentlyController } from "../src/backend/controller/RecentlyEditedController";
-import { NoteDataModel } from "../src/backend/model/NoteDataModel";
-
-jest.mock("../src/backend/model/NoteDataModel", () => {
-  class MockNoteDataModel {
-    private notes: Record<number, OtherDataInfo> = {
-      0: {
-        note_id: 0,
-        content_file_name: "note1.md",
-        last_edit_time: new Date("2024-01-01").getTime(),
-        title: "First Note",
-        labels: ["work"],
-      },
-      1: {
-        note_id: 1,
-        content_file_name: "note2.md",
-        last_edit_time: new Date("2024-01-03").getTime(),
-        title: "Second Note",
-        labels: ["personal"],
-      },
-    };
-
-    getAllNotes(): Record<number, OtherDataInfo> {
-      // return deep copy of data
-      return JSON.parse(JSON.stringify(this.notes));
-    }
-
-    updateNoteTimestamp(note_id: number): void {
-      // note_id 不存在時拋出例外
-      if (!this.notes.hasOwnProperty(note_id)) {
-        throw Error(`Note id ${note_id} does not exist`);
-      }
-
-      this.notes[note_id].last_edit_time = Date.now();
-    }
-  }
-
-  return { NoteDataModel: MockNoteDataModel };
-});
+import { FileManager } from "../src/backend/utils/FileManager";
+import {NOTE_TEST_DATA} from "./TestData"
 
 describe("RecentlyController", () => {
   let controller: RecentlyController;
 
   beforeEach(() => {
     controller = new RecentlyController();
-  });
-
-  describe("test updateEditedNote", () => {
-    it("test updateEditedNote that notes contain id", () => {
-      // given
-      let note_id: number;
-
-      // when & expected
-      note_id = 0;
-      expect(() => controller.updateEditedNote(note_id)).not.toThrow();
-      note_id = 1;
-      expect(() => controller.updateEditedNote(note_id)).not.toThrow();
-    });
-
-    it("should handle non-existent note ID", () => {
-      // given
-      let note_id: number = 999;
-
-      // when & expected
-      expect(() => controller.updateEditedNote(note_id)).toThrow(`Note id ${note_id} does not exist`);
+    // mock getAllFileNames 和 read
+    (FileManager.getAllFileNames as jest.Mock).mockResolvedValue(
+      NOTE_TEST_DATA.map(note => `${note.note_id}.json`)
+    );
+    (FileManager.read as jest.Mock).mockImplementation(async (fileName: string) => {
+      const note = NOTE_TEST_DATA.find(n => `${n.note_id}.json` === fileName);
+      if (!note) throw new Error(`File : ${fileName} not found`);
+      return note;
     });
   });
 
-  describe("test getRecentlyEditedNotes", () => {
-    it("should return filenames ordered by last_edit_time (newest first)", () => {
-      const result = controller.getRecentlyEditedNotes();
+  describe("updateEditedNote", () => {
+    it("should update note timestamp if note exists", async () => {
+      await expect(controller.updateEditedNote("1")).resolves.not.toThrow();
+      await expect(controller.updateEditedNote("2")).resolves.not.toThrow();
+    });
 
-      expect(result).toEqual([
-        "note2.md", // Newer note first
-        "note1.md", // Older note second
-      ]);
+    it("should throw if note does not exist", async () => {
+
+      // given 
+      const notExistFileName = "999";
+      (FileManager.read as jest.Mock).mockRejectedValueOnce(new Error(`File : ${notExistFileName}.json not found`));
+      await expect(controller.updateEditedNote(notExistFileName)).rejects.toThrow(`File : ${notExistFileName}.json not found`);
+    });
+  });
+
+  describe("getRecentlyEditedNotes", () => {
+    it("should return filenames ordered by last_edit_time (newest first)", async () => {
+
+      // given
+      const ground_truth = NOTE_TEST_DATA.sort((a, b) => b.last_edit_time - a.last_edit_time);
+      
+      // when
+      const result = await controller.getRecentlyEditedNotes();
+      
+      // expected
+      expect(result).toEqual(ground_truth);
     });
   });
 });

@@ -1,8 +1,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import { v4 as uuidv4 } from "uuid"; 
+import { Note } from "../interfaces/NoteStructure";
 
 export class FileManager {
+
     static readonly _PATH = './data';
 
     static async write(fileName: string, content: any) {
@@ -13,10 +15,13 @@ export class FileManager {
         fs.writeFileSync(filePath, storableData);
     }
     
-    static async read(fileName: string) {
+    static async read(fileName: string):Promise<Note> {
         if (!fs.existsSync(FileManager._PATH)) fs.mkdirSync(FileManager._PATH);
         const filePath = path.join(this._PATH, fileName);
-        return fs.readFileSync(filePath, { encoding: 'utf-8', flag: 'r' });
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`File : ${filePath} not found`);
+        }
+        return JSON.parse(fs.readFileSync(filePath, { encoding: 'utf-8', flag: 'r' }));
     }
 
     static generateUniqueUUID(directoryPath: string): string {
@@ -31,5 +36,13 @@ export class FileManager {
         } while (fs.existsSync(filePath)); // 確保 UUID 不與現有文件名衝突
     
         return newUUID;
+    }
+
+    static async getAllFileNames():Promise<string[]>{
+
+        if (!fs.existsSync(FileManager._PATH)) 
+            fs.mkdirSync(FileManager._PATH);
+
+        return await fs.promises.readdir(FileManager._PATH);
     }
 }
