@@ -56,7 +56,7 @@ git push
 git push --set-upstream origin <branch_name>
 ```
 
-## Testing
+## Testing Coverage
 
 請各位 PR 上來的程式碼需自行撰寫 unit test，並確保 code coverage = 100 %
 
@@ -64,12 +64,14 @@ git push --set-upstream origin <branch_name>
 
 **全部.test.ts 都測**
 
-```
-npm run test -- --coverage
-```
+> 直接運行 npm test 即可自動生成 coverage
 
 **測試單獨檔案**
 
 ```
 npx jest <pathToTestFile> -- --coverage
 ```
+
+**如何查看coverage**
+
+直接在瀏覽器打開 `./coverage/index.html` 即可
