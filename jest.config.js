@@ -1,4 +1,6 @@
 module.exports = {
     preset: "ts-jest",
-    testMatch: ["**/*.test.ts"]
+    testMatch: ["**/*.test.ts"],
+    collectCoverage: true,
+    coverageReporters: ["json", "html"]
 }
