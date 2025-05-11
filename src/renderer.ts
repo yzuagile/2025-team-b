@@ -1,8 +1,8 @@
-const addNoteBtn = document.getElementById('addNoteBtn');
-const noteDialog = document.getElementById('noteDialog');
-const okBtn = document.getElementById('okBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-const noteTitleInput = document.getElementById('noteTitle');
+const addNoteBtn = document.getElementById('addNoteBtn') as HTMLButtonElement;
+const noteDialog = document.getElementById('noteDialog') as HTMLDialogElement;
+const okBtn = document.getElementById('okBtn') as HTMLButtonElement;
+const cancelBtn = document.getElementById('cancelBtn') as HTMLButtonElement;
+const noteTitleInput = document.getElementById('noteTitle') as HTMLInputElement;
 
 addNoteBtn.addEventListener('click', () => {
   noteTitleInput.value = 'untitle'; // reset to default
