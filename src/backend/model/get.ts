@@ -10,7 +10,7 @@ export async function getAllNotes(): Promise<Note[]> {
             return content;
         })
     );
-    return notes;
+    return notes as Note[];
 }
 
 
