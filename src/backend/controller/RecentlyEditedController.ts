@@ -2,23 +2,23 @@ import { updateTimeStamp } from '../model/update';
 import { getAllNotes } from '../model/get';
 import { Note } from '../interfaces/NoteStructure';
 
-// export class RecentlyController{
+export class RecentlyController {
 
 
-constructor(){
+    constructor() {
 
-}
-
-    public async updateEditedNote(uuid: string): Promise < void> {
-
-    try{
-        await updateTimeStamp(uuid);
     }
-        catch(err) {
 
-//             throw err;
-//         }
-//     }
+    public async updateEditedNote(uuid: string): Promise<void> {
+
+        try {
+            await updateTimeStamp(uuid);
+        }
+        catch (err) {
+
+            throw err;
+        }
+    }
 
     public async getRecentlyEditedNotes(): Promise<Note[]> {
         /*
