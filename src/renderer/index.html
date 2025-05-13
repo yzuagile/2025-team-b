@@ -2,11 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
+    <title>Another Notion</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/main.tsx"></script>
+    <div class="container">
+      <h1>Another Notion</h1>
+      <p class="description">這是一個筆記應用程式。</p>
+      <button class="main-button" id="addNoteBtn">新增筆記</button>
+    </div>
+
+    <dialog id="noteDialog">
+      <form method="dialog" class="dialog-form">
+        <h2 class="dialog-title">新增筆記</h2>
+        
+        <label for="noteTitle" class="dialog-label">筆記名稱：</label>
+        <input type="text" id="noteTitle" name="noteTitle" value="untitle" class="dialog-input" />
+        
+        <div class="dialog-buttons">
+          <button id="okBtn" value="ok" class="ok-button">確定</button>
+          <button id="cancelBtn" value="cancel" class="cancel-button">取消</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="renderer.ts"></script>
   </body>
 </html>
