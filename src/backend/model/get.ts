@@ -6,7 +6,7 @@ export async function getAllNotes(): Promise<Note[]> {
 
     const notes = await Promise.all(
         fileNames.map(async (fileName) => {
-            const content = await FileManager.read(fileName);
+            const content = await FileManager.read(fileName) as Note;
             return content;
         })
     );
@@ -18,7 +18,7 @@ export async function getNote(uuid:string):Promise<Note> {
 
     
     try{
-        return await FileManager.read(uuid);
+        return await FileManager.read(uuid) as Note;
     }
     catch(err)
     {
