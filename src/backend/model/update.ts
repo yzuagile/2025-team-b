@@ -9,7 +9,7 @@ export async function updateTimeStamp(uuid: string):Promise<ResultType<boolean>>
     let success = false;
     let err = null;
     try {
-        let note = await FileManager.read(fileName);
+        let note = await FileManager.read(fileName) as Note;
         note.last_edit_time = Date.now();
         await FileManager.write(fileName, note);
 
@@ -31,7 +31,7 @@ export async function updateNote(uuid: string, note: Note) {
 export async function updateTitle(uuid: string, title:string) {
 
     const fileName = `${uuid}.json`
-    let note = await FileManager.read(fileName);
+    let note = await FileManager.read(fileName) as Note;
     note.title = title;
     updateTimeStamp(uuid);
     await FileManager.write(fileName, note);
@@ -39,8 +39,8 @@ export async function updateTitle(uuid: string, title:string) {
 
 export async function updateLabels(uuid: string, newLabels: string[]) {
     const fileName = `${uuid}.json`
-    let note = await FileManager.read(fileName);
-    let temp = new Set(note.labels.concat(newLabels));
+    let note = await FileManager.read(fileName)as Note;
+    let temp = new Set(note.labels.concat(newLabels)) ;
     note.labels = Array.from(temp);
     updateTimeStamp(uuid);
 
