@@ -44,7 +44,7 @@ describe('Write/Read Data with Normal Json File', () => {
         try {
             await FileManager.write(fileName, rawData);
             const data = await FileManager.read(fileName);
-            expect(data).toEqual(JSON.stringify(rawData));
+            expect(data).toEqual(rawData);
         } catch(err) { throw err; }
     });
 });
