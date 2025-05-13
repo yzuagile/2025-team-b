@@ -10,18 +10,15 @@ export async function getAllNotes(): Promise<Note[]> {
             return content;
         })
     );
-    return notes;
+    return notes as Note[];
 }
 
 
-export async function getNote(uuid:string):Promise<Note> {
-
-    
-    try{
+export async function getNote(uuid: string): Promise<Note> {
+    try {
         return await FileManager.read(uuid);
     }
-    catch(err)
-    {
+    catch (err) {
         throw err;
     }
 }
