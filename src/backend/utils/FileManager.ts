@@ -15,7 +15,8 @@ export class FileManager {
             const filePath = path.join(FileManager._PATH, fileName);
             const storableData = JSON.stringify(content);
             
-            await fs.writeFile(filePath, storableData, 'utf8');
+            // 若檔案存在，會覆寫檔案內容
+            await fs.writeFile(filePath, storableData, { encoding: 'utf8', flag: 'w' });
         }
         catch (err) 
         {
