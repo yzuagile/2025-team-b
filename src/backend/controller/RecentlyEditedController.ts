@@ -1,21 +1,21 @@
-import {updateTimeStamp} from '../model/update';
+import { updateTimeStamp } from '../model/update';
 import { getAllNotes } from '../model/get';
 import { Note } from '../interfaces/NoteStructure';
 
-export class RecentlyController{
+export class RecentlyController {
 
 
-    constructor(){
+    constructor() {
 
     }
 
-    public async updateEditedNote(uuid:string):Promise<void>{
+    public async updateEditedNote(uuid: string): Promise<void> {
 
-        try{
+        try {
             await updateTimeStamp(uuid);
         }
-        catch (err){
-            
+        catch (err) {
+
             throw err;
         }
     }
@@ -23,7 +23,7 @@ export class RecentlyController{
     public async getRecentlyEditedNotes(): Promise<Note[]> {
         /*
         * 回傳排序最近使用時間（由近到久）後的 Note
-        */ 
+        */
 
         const notes = await getAllNotes();
         const sortedNotesByTime = notes.sort((a, b) => b.last_edit_time - a.last_edit_time);

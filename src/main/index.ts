@@ -1,15 +1,27 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 
+const isDev = process.env.NODE_ENV === 'development';
+const rendererURL = 'http://localhost:3000';
+
 function createWindow() {
     const window = new BrowserWindow({
         height: 600,
         width: 800,
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
+            contextIsolation: true
         }
     });
-    window.loadFile('../index.html');
+
+    if (isDev) {
+        window.loadURL(rendererURL);
+        window.webContents.openDevTools();
+      } else {
+        window.loadFile(path.join(__dirname, '../renderer/index.html'));
+      }
+    
+      //window.loadFile('../index.html');
 }
 
 app.whenReady().then(() => {
