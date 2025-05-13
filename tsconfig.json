@@ -3,10 +3,13 @@
         "module": "commonjs",
         "noImplicitAny": true,
         "sourceMap": true,
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
         "outDir": "dist",
         "rootDir": "src"
     },
     "include": [
-        "src/**/*"
+        "src"
     ]
 }
