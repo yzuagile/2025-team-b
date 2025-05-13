@@ -1,4 +1,3 @@
-import { Note } from "../interfaces/NoteStructure";
 import { FileManager } from "../utils/FileManager";
 
 export async function getAllNotes(): Promise<Note[]> {
