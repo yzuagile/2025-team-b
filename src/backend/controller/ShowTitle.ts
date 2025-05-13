@@ -1,8 +1,8 @@
-import * as getNote from "../model/get";
+import { getNote } from "../model/get";
 
 export async function showTitle(uuid: string): Promise<string> {
     try {
-        const note = await getNote.getNote(uuid);
+        const note = await getNote(uuid);
         if (!note) {
             console.error("Note not found");
             return;
