@@ -1,6 +1,5 @@
 import { updateTimeStamp } from '../model/update';
 import { getAllNotes } from '../model/get';
-import { Note } from '../interfaces/NoteStructure';
 
 export class RecentlyController {
 
