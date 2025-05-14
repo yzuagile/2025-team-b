@@ -1,13 +1,15 @@
 import { Note, ResultType } from "../interfaces/NoteStructure";
 import { FileManager } from "../utils/FileManager";
-
-import * as fs from "fs";
-import * as path from "path";
+import * as find from "./find";
 
 export async function updateTimeStamp(uuid: string):Promise<boolean> {
     
+    if(!find.idExist(uuid))
+        return false;
+
     const fileName = `${uuid}.json`;
     try {
+
         let note = await FileManager.read(fileName) as Note;
         note.last_edit_time = Date.now();
         await FileManager.write(fileName, note);
@@ -21,6 +23,10 @@ export async function updateTimeStamp(uuid: string):Promise<boolean> {
 }
 
 export async function updateNote(uuid: string, note: Note):Promise<boolean> {
+
+    if(!find.idExist(uuid))
+        return false;
+
     const fileName = `${uuid}.json`
     try {
 
@@ -35,6 +41,9 @@ export async function updateNote(uuid: string, note: Note):Promise<boolean> {
 }
 
 export async function updateTitle(uuid: string, title:string) {
+
+    if(!find.idExist(uuid))
+        return false;
 
     const fileName = `${uuid}.json`
     try {
@@ -51,6 +60,9 @@ export async function updateTitle(uuid: string, title:string) {
 }
 
 export async function updateLabels(uuid: string, newLabels: string[]) {
+
+    if(!find.idExist(uuid))
+        return false;
     
     const fileName = `${uuid}.json`
     try{
@@ -71,6 +83,9 @@ export async function updateLabels(uuid: string, newLabels: string[]) {
 }
 
 export async function updateContext(uuid:string, context:string) {
+
+    if(!find.idExist(uuid))
+        return false;
     
     const fileName = `${uuid}.json`
     try {

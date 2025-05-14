@@ -52,8 +52,13 @@ export class FileManager {
 
     static async getAllFileNames():Promise<string[]>{
 
-        fs.mkdir(FileManager._PATH);
+        try{
+            fs.mkdir(FileManager._PATH);
         
-        return await fs.readdir(FileManager._PATH);
+            return await fs.readdir(FileManager._PATH);
+        }
+        catch(err){
+            throw err;
+        }
     }
 }

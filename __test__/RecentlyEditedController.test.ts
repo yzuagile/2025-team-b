@@ -1,52 +1,69 @@
-jest.mock("../src/backend/utils/FileManager");
-
+jest.mock("../src/backend/model/update");
+jest.mock("../src/backend/model/get");
 
 import { RecentlyController } from "../src/backend/controller/RecentlyEditedController";
-import { FileManager } from "../src/backend/utils/FileManager";
-import {NOTE_TEST_DATA} from "./TestData"
+import { updateTimeStamp } from "../src/backend/model/update";
+import { getAllNotes } from "../src/backend/model/get";
+import { NOTE_TEST_DATA } from "./TestData";
+import { Note } from "../src/backend/interfaces/NoteStructure";
 
 describe("RecentlyController", () => {
   let controller: RecentlyController;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     controller = new RecentlyController();
-    // mock getAllFileNames 和 read
-    (FileManager.getAllFileNames as jest.Mock).mockResolvedValue(
-      NOTE_TEST_DATA.map(note => `${note.note_id}.json`)
-    );
-    (FileManager.read as jest.Mock).mockImplementation(async (fileName: string) => {
-      const note = NOTE_TEST_DATA.find(n => `${n.note_id}.json` === fileName);
-      if (!note) throw new Error(`File : ${fileName} not found`);
-      return note;
-    });
   });
 
   describe("updateEditedNote", () => {
-    it("should update note timestamp if note exists", async () => {
-      await expect(controller.updateEditedNote("1")).resolves.not.toThrow();
-      await expect(controller.updateEditedNote("2")).resolves.not.toThrow();
+    it("should return true when updateTimeStamp resolves true", async () => {
+      (updateTimeStamp as jest.Mock).mockResolvedValue(true);
+
+      await expect(controller.updateEditedNote("1")).resolves.toBe(true);
+      expect(updateTimeStamp).toHaveBeenCalledWith("1");
     });
 
-    it("should throw if note does not exist", async () => {
+    it("should return false when updateTimeStamp resolves false", async () => {
+      (updateTimeStamp as jest.Mock).mockResolvedValue(false);
 
-      // given 
-      const notExistFileName = "999";
-      (FileManager.read as jest.Mock).mockRejectedValueOnce(new Error(`File : ${notExistFileName}.json not found`));
-      await expect(controller.updateEditedNote(notExistFileName)).rejects.toThrow(`File : ${notExistFileName}.json not found`);
+      await expect(controller.updateEditedNote("2")).resolves.toBe(false);
+      expect(updateTimeStamp).toHaveBeenCalledWith("2");
     });
+
   });
 
   describe("getRecentlyEditedNotes", () => {
-    it("should return filenames ordered by last_edit_time (newest first)", async () => {
+    it("should return notes sorted by last_edit_time descending", async () => {
+      // Prepare a shuffled array of notes
 
-      // given
-      const ground_truth = NOTE_TEST_DATA.sort((a, b) => b.last_edit_time - a.last_edit_time);
-      
-      // when
+      (getAllNotes as jest.Mock).mockResolvedValue(NOTE_TEST_DATA);
+
+      const expected = NOTE_TEST_DATA.sort(
+        (a, b) => b.last_edit_time - a.last_edit_time
+      );
+
       const result = await controller.getRecentlyEditedNotes();
-      
-      // expected
-      expect(result).toEqual(ground_truth);
+
+      expect(getAllNotes).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(expected);
+    });
+
+    it("should return empty array when getAllNotes returns empty array", async () => {
+      (getAllNotes as jest.Mock).mockResolvedValue([]);
+
+      const result = await controller.getRecentlyEditedNotes();
+
+      expect(getAllNotes).toHaveBeenCalledTimes(1);
+      expect(result).toEqual([]);
+    });
+
+    it("should return undefined when getAllNotes returns undefined", async () => {
+      (getAllNotes as jest.Mock).mockResolvedValue(undefined);
+
+      const result = await controller.getRecentlyEditedNotes();
+
+      expect(getAllNotes).toHaveBeenCalledTimes(1);
+      expect(result).toBeUndefined();
     });
   });
 });
