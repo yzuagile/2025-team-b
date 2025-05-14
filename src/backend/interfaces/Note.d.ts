@@ -1,6 +1,4 @@
-import { FileManager } from "../utils/FileManager";
-
-export interface Note {
+declare interface Note {
     // 筆記的Id
     readonly note_id: string;
     // 筆記對應的md檔案名稱
