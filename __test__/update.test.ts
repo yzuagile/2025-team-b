@@ -16,7 +16,7 @@ describe("test update services", () => {
     beforeEach(() => {
         jest.clearAllMocks();
 
-        jest.mocked(FileManager.read).mockImplementation((fileName: string) => {
+        jest.spyOn(FileManager, "read").mockImplementation((fileName: string) => {
 
             const uuid = fileName.replace(/\.json$/, '');
             const note = Temp_Data.find(n => n.note_id === uuid);
@@ -24,11 +24,15 @@ describe("test update services", () => {
             throw new Error("file not exist");
         })
 
-        jest.mocked(FileManager.write).mockImplementation((fileName: string, content: unknown) => {
+        jest.spyOn(FileManager, "write").mockImplementation((fileName: string, content: unknown) => {
             const uuid = fileName.replace(/\.json$/, '');
             const index = Temp_Data.findIndex(note => note.note_id === uuid);
-            if (index === -1) return Promise.reject("write failed");
-            Temp_Data[index] = { ...Temp_Data[index], ...content as Note };
+            if(index != -1){
+                Temp_Data[index] = { ...Temp_Data[index], ...content as Note };
+            }
+            else{
+                Temp_Data.push(content as Note);
+            }
             return Promise.resolve();
         });
     });
