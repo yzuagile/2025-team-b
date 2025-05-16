@@ -4,7 +4,7 @@ jest.mock("../src/backend/model/find.ts");
 import { FileManager } from "../src/backend/utils/FileManager";
 import { updateTimeStamp, updateNote, updateTitle, updateLabels, updateContext } from "../src/backend/model/update";
 import { NOTE_TEST_DATA } from "./TestData";
-import { Note } from "../src/backend/interfaces/NoteStructure";
+import { Note } from "../src/backend/interfaces/Note";
 import * as find from "../src/backend/model/find";
 
 

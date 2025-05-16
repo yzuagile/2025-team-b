@@ -5,7 +5,6 @@ import { RecentlyController } from "../src/backend/controller/RecentlyEditedCont
 import { updateTimeStamp } from "../src/backend/model/update";
 import { getAllNotes } from "../src/backend/model/get";
 import { NOTE_TEST_DATA } from "./TestData";
-import { Note } from "../src/backend/interfaces/NoteStructure";
 
 describe("RecentlyController", () => {
   let controller: RecentlyController;

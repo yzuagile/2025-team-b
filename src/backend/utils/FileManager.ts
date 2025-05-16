@@ -79,7 +79,7 @@ export class FileManager {
     static async getAllFileNames():Promise<string[]>{
 
         try{
-            fs.mkdir(FileManager._PATH);
+            await fs.mkdir(FileManager._PATH, { recursive: true });
         
             return await fs.readdir(FileManager._PATH);
         }

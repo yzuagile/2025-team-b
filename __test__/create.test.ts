@@ -1,6 +1,6 @@
 import { NOTE_TEST_DATA } from "./TestData"
 import { createNote } from "../src/backend/model/create"
-import { Note } from "../src/backend/interfaces/NoteStructure"
+import { Note } from "../src/backend/interfaces/Note"
 import { FileManager } from "../src/backend/utils/FileManager"
 
 
