@@ -1,7 +1,7 @@
 import { showTitle } from '../src/backend/controller/ShowTitle';
 import *as getNote from '../src/backend/model/get';
 import { NOTE_TEST_DATA } from './TestData';
-import { Note } from '../src/backend/interfaces/NoteStructure';
+import { Note } from '../src/backend/interfaces/Note';
 
 describe("showTitle", () => {
     it("return title of the note", async () => {

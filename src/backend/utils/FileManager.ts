@@ -14,7 +14,8 @@ export class FileManager {
             const filePath = path.join(FileManager._PATH, fileName);
             const storableData = JSON.stringify(content);
             
-            await fs.writeFile(filePath, storableData, 'utf8');
+            // 若檔案存在，會覆寫檔案內容
+            await fs.writeFile(filePath, storableData, { encoding: 'utf8', flag: 'w' });
         }
         catch (err) 
         {
@@ -36,22 +37,54 @@ export class FileManager {
         }
     }
 
-    static generateUniqueUUID(directoryPath: string): string {
-        fs.mkdir(directoryPath, { recursive: true });
+    static randomUUID() {
+        let d = new Date().getTime();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    }
+
+    static async generateUniqueUUID(directoryPath: string): Promise<string> {
+        
+        try{
+            await fs.mkdir(directoryPath, { recursive: true });
     
-        let newUUID: string;
-        let filePath: string;
-    
-        newUUID = uuidv4();
-        filePath = path.join(directoryPath, `${newUUID}.json`);
-    
-        return newUUID;
+            let newUUID: string;
+            let filePath: string;
+            
+            do {
+                newUUID = FileManager.randomUUID();
+                filePath = path.join(directoryPath, `${newUUID}.json`);
+            } while (await this.fileExists(filePath));
+
+            return newUUID;
+        }
+        catch(err){
+            throw err;
+        }
+        
+    }
+
+    private static async fileExists(filePath: string): Promise<boolean> {
+        try {
+            await fs.access(filePath);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     static async getAllFileNames():Promise<string[]>{
 
-        fs.mkdir(FileManager._PATH);
+        try{
+            await fs.mkdir(FileManager._PATH, { recursive: true });
         
-        return await fs.readdir(FileManager._PATH);
+            return await fs.readdir(FileManager._PATH);
+        }
+        catch(err){
+            throw err;
+        }
     }
 }

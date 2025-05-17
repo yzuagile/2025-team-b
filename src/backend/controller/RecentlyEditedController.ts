@@ -8,15 +8,10 @@ export class RecentlyController {
 
     }
 
-    public async updateEditedNote(uuid: string): Promise<void> {
+    public async updateEditedNote(uuid: string): Promise<boolean> {
 
-        try {
-            await updateTimeStamp(uuid);
-        }
-        catch (err) {
-
-            throw err;
-        }
+        let result = await updateTimeStamp(uuid);
+        return result;
     }
 
     public async getRecentlyEditedNotes(): Promise<Note[]> {
@@ -25,6 +20,10 @@ export class RecentlyController {
         */
 
         const notes = await getAllNotes();
+
+        if(notes === undefined)
+            return undefined
+        
         const sortedNotesByTime = notes.sort((a, b) => b.last_edit_time - a.last_edit_time);
         return sortedNotesByTime;
 

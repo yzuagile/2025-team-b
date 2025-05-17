@@ -1,4 +1,4 @@
-import { Note } from "../src/backend/interfaces/NoteStructure";
+import {Note} from "../src/backend/interfaces/Note"
 
 export const NOTE_TEST_DATA: Note[] = [
   {

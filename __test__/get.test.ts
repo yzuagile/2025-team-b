@@ -1,11 +1,8 @@
 jest.mock("../src/backend/utils/FileManager");
 
-import {getAllNotes, getNote} from '../src/backend/model/get'
+import { getAllNotes, getNote } from '../src/backend/model/get'
 import { NOTE_TEST_DATA } from './TestData';
 import { FileManager } from '../src/backend/utils/FileManager'
-
-// Mock FileManager
-
 
 
 describe("data model get service", () => {
@@ -48,14 +45,16 @@ describe("data model get service", () => {
     expect(note.title).toBe("Test Note 1");
   });
 
-  it("getNote should handle non-existent file gracefully", async () => {
+  it("getNote should return undefined when file read fails", async () => {
 
-    // given
     const mockFileName = "not-exist.json";
-    // 模擬找不到檔案時 read 回傳拋錯
-    (FileManager.read as jest.Mock).mockRejectedValueOnce(new Error(`File : ${mockFileName} not found`))
+    (FileManager.read as jest.Mock).mockRejectedValueOnce(
+      new Error(`File : ${mockFileName} not found`)
+    );
 
-    // expected
-    await expect(getNote(mockFileName)).rejects.toThrow(`File : ${mockFileName} not found`);
+    const note = await getNote(mockFileName);
+
+    expect(FileManager.read).toHaveBeenCalledWith(mockFileName);
+    expect(note).toBeUndefined();
   });
 });

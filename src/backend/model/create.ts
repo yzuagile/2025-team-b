@@ -1,13 +1,22 @@
-import { FileManager } from "../utils/FileManager"
+import { Note } from "../interfaces/Note";
+import { FileManager } from "../utils/FileManager";
 
-export function createNote():string {
+export async function createNote(title:string = "", labels:string[] = [], context:string = ""):Promise<string> {
     let newNote: Note = {
-        note_id: FileManager.generateUniqueUUID(""),
+        note_id: await FileManager.generateUniqueUUID(FileManager._PATH),
         last_edit_time: Date.now(),
-        title: "",
-        labels: [],
-        context: "",
+        title: title,
+        labels: labels,
+        context: context,
     }
-    FileManager.write(newNote.note_id, newNote);
-    return newNote.note_id;
+
+    try{
+        const fileName = `${newNote.note_id}.json`
+        await FileManager.write(fileName, newNote);
+        return newNote.note_id;
+    }
+    catch(err){
+        console.error(err);
+        return undefined;
+    }
 }

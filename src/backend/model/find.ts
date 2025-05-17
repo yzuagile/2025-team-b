@@ -1,4 +1,4 @@
-import { FileManager } from "../utils/FileManager"
+import {FileManager} from "../utils/FileManager"
 
 import * as fs from "fs";
 import * as path from "path";

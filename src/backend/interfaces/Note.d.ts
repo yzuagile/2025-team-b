@@ -21,3 +21,4 @@ declare interface Note {
     //     this.fileManage = new FileManager(); // 初始化 FileManager
     // }
 }
+export type ResultType<T> = [T, Error | null];
