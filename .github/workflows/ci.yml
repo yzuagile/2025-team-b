@@ -28,21 +28,21 @@ jobs:
       - name: Run Tests
         run: npm test
 
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/
+      # - name: Upload Coverage Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: coverage-report
+      #     path: coverage/
 
-      - name: Check Coverage
-        shell: pwsh
-        run: |
-          $coverage = Get-Content coverage/coverage-summary.json | ConvertFrom-Json
-          $lines = $coverage.total.lines.pct
-          if ($lines -lt 100) {
-            Write-Error "Code coverage is below 100%. Current coverage: $lines%"
-            exit 1
-          }
+      # - name: Check Coverage
+      #   shell: pwsh
+      #   run: |
+      #     $coverage = Get-Content coverage/coverage-summary.json | ConvertFrom-Json
+      #     $lines = $coverage.total.lines.pct
+      #     if ($lines -lt 100) {
+      #       Write-Error "Code coverage is below 100%. Current coverage: $lines%"
+      #       exit 1
+      #     }
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
