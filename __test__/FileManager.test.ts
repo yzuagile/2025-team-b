@@ -1,5 +1,4 @@
 
-import { Note } from "../src/backend/interfaces/Note";
 import { FileManager } from "../src/backend/utils/FileManager";
 import { NOTE_TEST_DATA } from "./TestData"
 import * as fs from 'fs';
