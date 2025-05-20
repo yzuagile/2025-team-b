@@ -1,6 +1,6 @@
 import { NOTE_TEST_DATA } from "./TestData"
-import { createNote } from "../src/backend/model/create"
-import { FileManager } from "../src/backend/utils/FileManager"
+import { createNote } from "../backend/model/create"
+import { FileManager } from "../backend/utils/FileManager"
 
 
 describe("test create service", () => {

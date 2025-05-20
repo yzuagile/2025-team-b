@@ -1,10 +1,10 @@
-jest.mock("../src/backend/utils/FileManager");
-jest.mock("../src/backend/model/find.ts");
+jest.mock("../backend/utils/FileManager");
+jest.mock("../backend/model/find.ts");
 
-import { FileManager } from "../src/backend/utils/FileManager";
-import { updateTimeStamp, updateNote, updateTitle, updateLabels, updateContext } from "../src/backend/model/update";
+import { FileManager } from "../backend/utils/FileManager";
+import { updateTimeStamp, updateNote, updateTitle, updateLabels, updateContext } from "../backend/model/update";
 import { NOTE_TEST_DATA } from "./TestData";
-import * as find from "../src/backend/model/find";
+import * as find from "../backend/model/find";
 
 
 

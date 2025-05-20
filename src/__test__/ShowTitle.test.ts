@@ -1,5 +1,5 @@
-import { showTitle } from '../src/backend/controller/ShowTitle';
-import *as getNote from '../src/backend/model/get';
+import { showTitle } from '../backend/controller/ShowTitle';
+import *as getNote from '../backend/model/get';
 import { NOTE_TEST_DATA } from './TestData';
 
 describe("showTitle", () => {

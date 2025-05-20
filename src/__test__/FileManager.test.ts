@@ -1,5 +1,5 @@
 
-import { FileManager } from "../src/backend/utils/FileManager";
+import { FileManager } from "../backend/utils/FileManager";
 import { NOTE_TEST_DATA } from "./TestData"
 import * as fs from 'fs';
 import * as path from 'path';

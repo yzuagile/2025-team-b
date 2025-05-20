@@ -1,4 +1,4 @@
-import { idExist } from "../src/backend/model/find";
+import { idExist } from "../backend/model/find";
 
 describe("test find service", ()=>{
 

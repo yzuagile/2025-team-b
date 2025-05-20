@@ -16,7 +16,6 @@ export async function updateTimeStamp(uuid: string):Promise<boolean> {
         return true;
     }
     catch(e) {
-        
         console.log(e);
         return false;
     };

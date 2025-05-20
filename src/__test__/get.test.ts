@@ -1,8 +1,8 @@
-jest.mock("../src/backend/utils/FileManager");
+jest.mock("../backend/utils/FileManager");
 
-import { getAllNotes, getNote } from '../src/backend/model/get'
+import { getAllNotes, getNote } from '../backend/model/get'
 import { NOTE_TEST_DATA } from './TestData';
-import { FileManager } from '../src/backend/utils/FileManager'
+import { FileManager } from '../backend/utils/FileManager'
 
 
 describe("data model get service", () => {

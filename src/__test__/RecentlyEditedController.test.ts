@@ -1,9 +1,9 @@
-jest.mock("../src/backend/model/update");
-jest.mock("../src/backend/model/get");
+jest.mock("../backend/model/update");
+jest.mock("../backend/model/get");
 
-import { RecentlyController } from "../src/backend/controller/RecentlyEditedController";
-import { updateTimeStamp } from "../src/backend/model/update";
-import { getAllNotes } from "../src/backend/model/get";
+import { RecentlyController } from "../backend/controller/RecentlyEditedController";
+import { updateTimeStamp } from "../backend/model/update";
+import { getAllNotes } from "../backend/model/get";
 import { NOTE_TEST_DATA } from "./TestData";
 
 describe("RecentlyController", () => {
