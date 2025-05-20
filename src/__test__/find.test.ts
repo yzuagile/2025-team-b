@@ -1,35 +1,36 @@
 import { idExist } from "../backend/model/find";
+import fs from "fs";
+import path from "path";
 
-describe("test find service", ()=>{
+describe("test find service", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    beforeEach(()=>{
-        jest.clearAllMocks();
-    })
+  describe("test idExist", () => {
+    it("should return true if file exists (mocked)", () => {
+      const existingFileName = "createTestFile";
 
-    describe("test idExist", ()=>{
-        
-        it("should return true if file exist in data", ()=>{
+      jest.spyOn(fs, "existsSync").mockReturnValue(true);
 
-            // given
-            const existingFileName = "createTestFile";
+      const isIdExist = idExist(existingFileName);
 
-            // when
-            const isIsIdExist = idExist(existingFileName);
+      expect(isIdExist).toBe(true);
+      const expectedAbsolutePath = path.join(process.cwd(), 'data', `${existingFileName}.json`);
+      expect(fs.existsSync).toHaveBeenCalledWith(expectedAbsolutePath);
+    });
 
-            // expect
-            expect(isIsIdExist).toBe(true);
-        })
+    it("should return false if file does not exist (mocked)", () => {
+      const nonExistingFileName = "nonExistFile";
 
-        it("should return false if file exist in data", ()=>{
+      jest.spyOn(fs, "existsSync").mockReturnValue(false);
 
-            // given
-            const nonExistingFileName = "nonExistFile";
 
-            // when
-            const isIsIdExist = idExist(nonExistingFileName);
+      const isIdExist = idExist(nonExistingFileName);
 
-            // expect
-            expect(isIsIdExist).toBe(false);
-        })
-    })
-})
+      expect(isIdExist).toBe(false);
+      const expectedAbsolutePath = path.join(process.cwd(), 'data', `${nonExistingFileName}.json`);
+      expect(fs.existsSync).toHaveBeenCalledWith(expectedAbsolutePath);
+    });
+  });
+});
