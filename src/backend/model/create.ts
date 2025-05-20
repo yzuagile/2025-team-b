@@ -1,4 +1,4 @@
-import { Note } from "../interfaces/Note";
+
 import { FileManager } from "../utils/FileManager";
 
 export async function createNote(title:string = "", labels:string[] = [], context:string = ""):Promise<string> {

@@ -1,4 +1,4 @@
-import { Note, ResultType } from "../interfaces/NoteStructure";
+
 import { FileManager } from "../utils/FileManager";
 import * as find from "./find";
 
