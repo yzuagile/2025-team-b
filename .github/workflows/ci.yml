@@ -45,31 +45,3 @@ jobs:
         with:
           name: electron-app
           path: dist/
-
-  build-executables:
-    needs: build-and-test
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.x'
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build Executables
-        run: npm run make
-
-      - name: Upload Executables
-        uses: actions/upload-artifact@v4
-        with:
-          name: executables-${{ matrix.os }}
-          path: out/make/**/*
