@@ -31,15 +31,20 @@ jobs:
                    --coverageReporters="text" \
                    --coverageReporters="cobertura"
 
-      # 解析 coverage 並寫入 Job Summary（只看當前 branch）
+      # 解析 coverage
       - name: Code Coverage Summary
         if: always()                       # 測試失敗也想看覆蓋率就保留
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
           filename: coverage/cobertura-coverage.xml
-          format: markdown                # 產生 Markdown 表格
-          output: summary                 # 只寫 Job Summary，不自動留言
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          format: markdown
+          output: both
+          badge: false 
+
+      # 將 Markdown 報告寫入 Job Summary 分頁
+      - name: Add coverage to job summary
+        if: always()
+        run: cat code-coverage-results.md >> "$GITHUB_STEP_SUMMARY"
 
       # 把完整 HTML/LCOV 打包上傳
       - name: Upload Coverage Artifact
