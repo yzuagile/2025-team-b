@@ -1,65 +1,43 @@
-import { NOTE_TEST_DATA } from "./TestData"
-import { createNote } from "../backend/model/create"
-import { FileManager } from "../backend/utils/FileManager"
+import { NOTE_TEST_DATA } from "./TestData";
+import { createNote } from "../backend/model/create";
+import { FileManager } from "../backend/utils/FileManager";
 
+describe("createNote", () => {
+  // 每次都用深拷貝確保資料乾淨
+  let Temp_Data: Note[];
 
-describe("test create service", () => {
+  beforeEach(() => {
+    Temp_Data = structuredClone(NOTE_TEST_DATA);
 
-    let Temp_Data: Note[] = NOTE_TEST_DATA;
+    jest.clearAllMocks();
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+    // 1. 偽造 UUID
+    jest
+      .spyOn(FileManager, "generateUniqueUUID")
+      .mockResolvedValue("xxx123xxx");
 
-        jest.spyOn(FileManager, "generateUniqueUUID").mockResolvedValue("xxx123xxx");
+    // 2. 偽造寫檔：成功 → push；失敗個別 case 再覆寫
+    jest
+      .spyOn(FileManager, "write")
+      .mockImplementation((_fileName: string, content: unknown) => {
+        Temp_Data.push(content as Note);
+        return Promise.resolve();
+      });
+  });
 
-        jest.spyOn(FileManager, "write").mockImplementation((fileName: string, content: unknown) => {
-            const uuid = fileName.replace(/\.json$/, '');
-            const index = Temp_Data.findIndex(note => note.note_id === uuid);
-            if(index != -1){
-                Temp_Data[index] = { ...Temp_Data[index], ...content as Note };
-            }
-            else{
-                Temp_Data.push(content as Note);
-            }
-            return Promise.resolve();
-        });
-    });
+  it("寫入成功時應回傳 note_id", async () => {
+    const noteId = await createNote("標題", ["label"], "# h1");
+    expect(noteId).toBe("xxx123xxx");
+    expect(Temp_Data.some((n) => n.note_id === "xxx123xxx")).toBe(true);
+  });
 
-    afterEach(() => {
-        Temp_Data = NOTE_TEST_DATA;
-    })
+  it("寫入失敗時應回傳 undefined", async () => {
+    // 只針對此 case 把 write 變成 reject
+    (FileManager.write as jest.Mock).mockRejectedValueOnce(
+      new Error("write fail"),
+    );
 
-    describe("test createNote", () => {
-
-        it("createNote should return created note id if create successfully", async () => {
-
-            // given
-            const title: string = "test title";
-            const labels: string[] = ["label"]
-            const context: string = "#h1"
-
-            // when
-            const newNoteId = await createNote(title, labels, context);
-
-            // expect
-            const isNoteInFiles = Temp_Data.some(n => n.note_id === newNoteId);
-            expect(isNoteInFiles).toBe(true);
-        })
-
-        it("createNote should return undefine when there is a exception occur", async ()=>{
-
-            // given
-            (FileManager.write as jest.Mock).mockRejectedValue(new Error("write fail"));
-            const title: string = "test title";
-            const labels: string[] = ["label"]
-            const context: string = "#h1"
-
-            // when
-            const newNoteId = await createNote(title, labels, context);
-
-            // expect
-            expect(newNoteId).toBe(undefined);
-
-        })
-    })
-})
+    const noteId = await createNote("標題", ["label"], "# h1");
+    expect(noteId).toBeUndefined();
+  });
+});

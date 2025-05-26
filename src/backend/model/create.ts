@@ -1,7 +1,7 @@
 
 import { FileManager } from "../utils/FileManager";
 
-export async function createNote(title:string = "", labels:string[] = [], context:string = ""):Promise<string> {
+export async function createNote(title:string = "", labels:string[] = [], context:string = ""):Promise<string | undefined> {
     let newNote: Note = {
         note_id: await FileManager.generateUniqueUUID(FileManager._PATH),
         last_edit_time: Date.now(),
