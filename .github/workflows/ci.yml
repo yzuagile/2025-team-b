@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -25,8 +23,36 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Tests
-        run: npm test
+      # 產生 Cobertura 格式 coverage
+      - name: Run Tests & Generate Coverage (Cobertura)
+        run: |
+          npx jest --ci \
+                   --coverage \
+                   --coverageReporters="text" \
+                   --coverageReporters="cobertura"
+
+      # 解析 coverage
+      - name: Code Coverage Summary
+        if: always()                       # 測試失敗也想看覆蓋率就保留
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage/cobertura-coverage.xml
+          format: markdown
+          output: both
+          badge: false 
+
+      # 將 Markdown 報告寫入 Job Summary 分頁
+      - name: Add coverage to job summary
+        if: always()
+        run: cat code-coverage-results.md >> "$GITHUB_STEP_SUMMARY"
+
+      # 把完整 HTML/LCOV 打包上傳
+      - name: Upload Coverage Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
 
       - name: Publish Test Results
         uses: dorny/test-reporter@v2
@@ -35,22 +61,6 @@ jobs:
           name: Test Results
           path: junit.xml
           reporter: jest-junit
-
-      # - name: Upload Coverage Report
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: coverage-report
-      #     path: coverage/
-
-      # - name: Check Coverage
-      #   shell: pwsh
-      #   run: |
-      #     $coverage = Get-Content coverage/coverage-summary.json | ConvertFrom-Json
-      #     $lines = $coverage.total.lines.pct
-      #     if ($lines -lt 100) {
-      #       Write-Error "Code coverage is below 100%. Current coverage: $lines%"
-      #       exit 1
-      #     }
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
