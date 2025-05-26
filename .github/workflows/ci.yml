@@ -23,16 +23,31 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Tests with Coverage
-        # 加上 coverage 和 report 參數，才能讓後續 action 讀取
-        run: npm test -- --coverage --coverageReporters="text" --coverageReporters="text-summary"
+      # 產生 Cobertura 格式 coverage
+      - name: Run Tests & Generate Coverage (Cobertura)
+        run: |
+          npx jest --ci \
+                   --coverage \
+                   --coverageReporters="text" \
+                   --coverageReporters="cobertura"
 
-      - name: Jest Coverage Report
-        # 這個 action 會比對 base branch 並在 PR 留下覆蓋率報告
-        uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.6
+      # 解析 coverage 並寫入 Job Summary（只看當前 branch）
+      - name: Code Coverage Summary
+        if: always()                       # 測試失敗也想看覆蓋率就保留
+        uses: irongut/CodeCoverageSummary@v3
         with:
+          filename: coverage/cobertura-coverage.xml
+          format: markdown                # 產生 Markdown 表格
+          output: summary                 # 只寫 Job Summary，不自動留言
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # threshold: 80  # 如需設定最低覆蓋率，可取消註解並調整百分比 :contentReference[oaicite:0]{index=0}
+
+      # 把完整 HTML/LCOV 打包上傳
+      - name: Upload Coverage Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
 
       - name: Publish Test Results
         uses: dorny/test-reporter@v2
@@ -41,13 +56,6 @@ jobs:
           name: Test Results
           path: junit.xml
           reporter: jest-junit
-
-      - name: Upload Coverage Report Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
