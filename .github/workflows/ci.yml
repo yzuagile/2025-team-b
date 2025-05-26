@@ -23,8 +23,16 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Tests
-        run: npm test
+      - name: Run Tests with Coverage
+        # 加上 coverage 和 report 參數，才能讓後續 action 讀取
+        run: npm test -- --coverage --coverageReporters="text" --coverageReporters="text-summary"
+
+      - name: Jest Coverage Report
+        # 這個 action 會比對 base branch 並在 PR 留下覆蓋率報告
+        uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # threshold: 80  # 如需設定最低覆蓋率，可取消註解並調整百分比 :contentReference[oaicite:0]{index=0}
 
       - name: Publish Test Results
         uses: dorny/test-reporter@v2
@@ -34,7 +42,8 @@ jobs:
           path: junit.xml
           reporter: jest-junit
 
-      - name: Upload Coverage Report
+      - name: Upload Coverage Report Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
