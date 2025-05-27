@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8" />
+    <title>新增筆記 - Another Notion</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="noteTitle" placeholder="輸入筆記標題..." class="dialog-input" />
+        <h1> </h1>
+        <textarea id="markdownEditor" rows="10" cols="50" placeholder="輸入 Markdown 內容..."></textarea>
+        <br />
+        <button id="saveNoteBtn">💾 儲存筆記</button>
+        <button onclick="window.location.href='index.html'">❌ 取消</button>
+        <div id="saveMessage" style="display:none; color:green; margin-top:10px;">
+            ✅ 筆記已儲存成功！
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const noteId = params.get("id");
+
+            const noteTitleInput = document.getElementById("noteTitle");
+            const markdownEditor = document.getElementById("markdownEditor");
+
+            const notes = JSON.parse(localStorage.getItem("notes") || "[]");
+
+            if (noteId) {
+                const existingNote = notes.find(n => n.date === noteId);
+                if (existingNote) {
+                    noteTitleInput.value = existingNote.title;
+                    markdownEditor.value = existingNote.content;
+                }
+            }
+
+            const saveBtn = document.getElementById("saveNoteBtn");
+            saveBtn?.addEventListener("click", () => {
+                const title = noteTitleInput.value || "untitled";
+                const content = markdownEditor.value;
+
+                const note = {
+                    title,
+                    content,
+                    date: noteId || new Date().toISOString()
+                };
+
+                const index = notes.findIndex(n => n.date === note.date);
+                if (index !== -1) {
+                    notes[index] = note;
+                } else {
+                    notes.unshift(note);
+                }
+
+                localStorage.setItem("notes", JSON.stringify(notes));
+
+                const msg = document.getElementById("saveMessage");
+                msg.style.display = "block";
+
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

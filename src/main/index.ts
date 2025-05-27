@@ -18,7 +18,9 @@ function createWindow() {
         window.loadURL(rendererURL);
         window.webContents.openDevTools();
       } else {
-        window.loadFile(path.join(__dirname, '../renderer/index.html'));
+        const page = process.argv.includes('--editor') ? 'editor.html' : 'index.html';
+        window.loadFile(path.join(__dirname, `../renderer/${page}`));
+
       }
     
       //window.loadFile('../index.html');
