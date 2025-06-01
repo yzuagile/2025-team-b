@@ -23,7 +23,8 @@ export async function getAllNotes(): Promise<Note[]> {
 
 export async function getNote(uuid: string): Promise<Note> {
     try {
-        return await FileManager.read(uuid);
+        const fileName = `${uuid}.json`;
+        return await FileManager.read(fileName);
     }
     catch (err) {
         console.log(err);
