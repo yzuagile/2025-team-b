@@ -13,6 +13,7 @@
 }
 
 .sidebar-title {
+    margin-bottom: 5px;
     display: block;
     width: 100%;
     font-weight: bold;
@@ -41,7 +42,8 @@
 }
 
 .tag-item.selected {
-    background: #e5e7eb;
+    background: #000;
+    color: #fff;
     font-weight: 600;
 }
 
