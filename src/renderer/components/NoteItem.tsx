@@ -6,9 +6,10 @@ interface Props {
   title: string;
   selected: boolean;
   onSelect: (id: string) => void;
+  //onRename: (id: string, newTitle:string) => void;
 }
 
-export default function NoteItem({ id, title, selected, onSelect }: Props) {
+export default function NoteItem({ id, title, selected, onSelect}: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const liRef = useRef<HTMLLIElement>(null);
 
@@ -54,6 +55,7 @@ export default function NoteItem({ id, title, selected, onSelect }: Props) {
             onClick={() => {
               setMenuOpen(false);
               /* TODO: open rename modal */
+              
             }}
           >
             重新命名標題
