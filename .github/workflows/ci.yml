@@ -87,7 +87,7 @@ jobs:
         run: npm run build
 
       - name: Package Windows App
-        run: npx electron-builder --windows --x64
+        run: npm run package:windows
 
       - name: Upload Windows Build Artifacts
         uses: actions/upload-artifact@v4
