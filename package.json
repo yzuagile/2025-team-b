@@ -1,7 +1,7 @@
 {
     "name": "another_notion",
     "version": "1.0.0",
-    "description": "",
+    "description": "Electron-based note-taking app",
     "main": "dist/main/index.js",
     "keywords": [],
     "author": "YZU Agile TeamB",
@@ -35,7 +35,6 @@
         "start": "npm run build && electron ."
     },
     "dependencies": {
-        "electron": "^36.x",
         "junit": "^0.5.1",
         "marked": "^15.0.12",
         "react": "^19.1.0",
