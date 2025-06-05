@@ -9,7 +9,10 @@
     "build": {
         "files": [
             "dist/**/*"
-        ]
+        ],
+        "win": {
+            "target": "portable"
+        }
     },
     "devDependencies": {
         "@types/jest": "^29.5.14",
