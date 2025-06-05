@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 
 export function useNotes() {
-  const [notesMap, setNotesMap] = useState<Record<string,string>>({});
-  const [selected, setSelected] = useState<Note|undefined>(undefined);
+
+  // map title => id
+  let [notesMap, setNotesMap] = useState<Record<string, string>>({});
+  const [selected, setSelected] = useState<Note | undefined>(undefined);
   const [contextValue, setContextValue] = useState("");
 
   //  載入列表
@@ -11,6 +13,19 @@ export function useNotes() {
       setNotesMap(Object.fromEntries(all.map(n => [n.title, n.note_id])));
     });
   }, []);
+
+  //  視窗關閉前儲存
+  useEffect(() => {
+    const beforeUnload = async () => {
+      if (selected) {
+        await window.noteAPI.updateContext(selected.note_id, contextValue);
+      }
+    };
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
+  }, [selected, contextValue]);
 
   //  切換筆記
   async function selectNote(id: string) {
@@ -30,18 +45,22 @@ export function useNotes() {
     await selectNote(id);
   }
 
-  //  視窗關閉前儲存
-  useEffect(() => {
-    const beforeUnload = async () => {
-      if (selected) {
-        await window.noteAPI.updateContext(selected.note_id, contextValue);
-      }
+  // 重新命名筆記
+  async function renameNote(id: string, newTitle: string) {
+    await window.noteAPI.updateTitle(id, newTitle);
+    setNotesMap(prev => {
+    // 1. 找到舊 title
+    const oldTitle = Object.entries(prev)
+      .find(([, noteId]) => noteId === id)?.[0];
+
+    const { [oldTitle]: _, ...rest } = prev;
+
+    return {
+      ...rest,
+      [newTitle]: id,
     };
-    window.addEventListener("beforeunload", beforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", beforeUnload);
-    };
-  }, [selected, contextValue]);
+  });
+  }
 
   return {
     notesMap,
@@ -50,5 +69,6 @@ export function useNotes() {
     setContextValue,
     selectNote,
     createNote,
+    renameNote
   };
 }

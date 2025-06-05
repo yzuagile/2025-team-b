@@ -5,67 +5,46 @@ interface Props {
   id: string;
   title: string;
   selected: boolean;
-  onSelect: (id: string) => void;
-  //onRename: (id: string, newTitle:string) => void;
+  onSelect(id: string): void;
+  openRename(): void;
 }
 
-export default function NoteItem({ id, title, selected, onSelect}: Props) {
+export default function NoteItem({ id, title, selected, onSelect, openRename }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const liRef = useRef<HTMLLIElement>(null);
+  const ref = useRef<HTMLLIElement>(null);
 
   // 點擊 + 號
-  function toggleMenu(e: React.MouseEvent) {
-    e.stopPropagation();   // 阻止事件冒泡，以免被 click-outside 捕捉到
-    setMenuOpen((o) => !o);
+  function toggle(e: React.MouseEvent) {
+    e.stopPropagation();
+    setMenuOpen(true);
   }
 
-  // 點擊外部時自動關閉
+  // 點擊外部關閉
   useEffect(() => {
     if (!menuOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        liRef.current &&
-        !liRef.current.contains(e.target as Node)
-      ) {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         setMenuOpen(false);
       }
     };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
   return (
     <li
-      ref={liRef}
+      ref={ref}
       className={`tag-item${selected ? " selected" : ""}`}
       onClick={() => onSelect(id)}
     >
       <span>{title}</span>
-      <button className="menu-btn" onClick={toggleMenu}>
-        +
-      </button>
-
+      <button className={`menu-btn${selected ? " selected" : ""}`} onClick={toggle}>＋</button>
       {menuOpen && (
         <div className="dropdown-menu">
-          <button
-            onClick={() => {
-              setMenuOpen(false);
-              /* TODO: open rename modal */
-              
-            }}
-          >
+          <button onClick={openRename}>
             重新命名標題
           </button>
-          <button
-            onClick={() => {
-              setMenuOpen(false);
-              /* TODO: open add-label modal */
-            }}
-          >
+          <button onClick={() => setMenuOpen(false)}>
             加入標籤
           </button>
         </div>

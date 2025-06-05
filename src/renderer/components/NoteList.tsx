@@ -1,31 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import NoteItem from "./NoteItem";
-import "../style/NoteList.css"
+import RenameModal from "./RenameModal";
+import { useNotesContext } from "../context/NotesContext";
+import "../style/NoteList.css";
 
-interface Props {
-  notesMap: Record<string, string>;
-  selectedId?: string;
-  onSelect: (id: string) => void;
-  onRename: (id: string) => void;
-}
+export default function NoteList() {
+  const { notesMap, selected, selectNote, renameNote } = useNotesContext();
 
-export default function NoteList({ notesMap, selectedId, onSelect, onRename }: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [value, setValue] = useState("");
+  const [targetId, setTargetId] = useState<string | null>(null);
+
+  function openRename(id: string, title: string) {
+    setTargetId(id);
+    setValue(title);
+    setIsOpen(true);
+  }
+  function cancel() {
+    setIsOpen(false);
+    setTargetId(null);
+  }
+  async function handleConfirm() {
+    if (targetId && value.trim()) {
+      await renameNote(targetId, value.trim());
+    }
+    setIsOpen(false);
+    setTargetId(null);
+  }
+
   return (
     <>
       <ul className="tag-list">
-        {Object.entries(notesMap).map(([title, id]) => (
+        {Object.entries(notesMap).sort(
+          ([titleA], [titleB]) =>
+            titleA.localeCompare(titleB)
+        ).map(([title, id]) => (
           <NoteItem
             key={id}
             id={id}
             title={title}
-            selected={id === selectedId}
-            onSelect={onSelect}
-            onRename={onRename}
+            selected={id === selected?.note_id}
+            onSelect={selectNote}
+            openRename={() => openRename(id, title)}
           />
         ))}
       </ul>
 
+      <RenameModal
+        isOpen={isOpen}
+        value={value}
+        onChange={setValue}
+        onCancel={cancel}
+        onConfirm={handleConfirm}
+      />
     </>
-
   );
 }
