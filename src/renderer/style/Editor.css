@@ -13,3 +13,29 @@
   outline: none;
   resize: none;
 }
+
+.toolbar{
+  display: flex;
+  gap: 8px;          /* 按鈕間距 */
+  margin-left: 5px;
+  padding: 4px 0;    /* 上下內距 */
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.toolbar button {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toolbar button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #006ae6;
+}
