@@ -60,6 +60,7 @@ export function useNotes() {
       [newTitle]: id,
     };
   });
+
   }
 
   return {

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
 import "../style/RenameModal.css";
+import "../style/Modal.css"
 
 interface Props {
   isOpen: boolean;
