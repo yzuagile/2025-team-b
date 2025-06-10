@@ -12,5 +12,9 @@ export abstract class TextMode {
         return this.value;
     }
 
-    abstract actionPerform(start:number, end:number):void;
+    setValue(text:string){
+        this.value = text;
+    }
+    
+    abstract actionPerform(start:number, end:number):string|undefined;
 }
