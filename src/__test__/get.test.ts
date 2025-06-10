@@ -38,7 +38,7 @@ describe("data model get service", () => {
   it("getNote should return a single note by uuid", async () => {
     (FileManager.read as jest.Mock).mockResolvedValue(NOTE_TEST_DATA[0]);
 
-    const note = await getNote("1.json");
+    const note = await getNote("1");
 
     expect(FileManager.read).toHaveBeenCalledTimes(1);
     expect(note.note_id).toBe("1");
@@ -47,14 +47,14 @@ describe("data model get service", () => {
 
   it("getNote should return undefined when file read fails", async () => {
 
-    const mockFileName = "not-exist.json";
+    const mockFileName = "not-exist";
     (FileManager.read as jest.Mock).mockRejectedValueOnce(
       new Error(`File : ${mockFileName} not found`)
     );
 
     const note = await getNote(mockFileName);
 
-    expect(FileManager.read).toHaveBeenCalledWith(mockFileName);
+    expect(FileManager.read).toHaveBeenCalledWith(`${mockFileName}.json`);
     expect(note).toBeUndefined();
   });
 });

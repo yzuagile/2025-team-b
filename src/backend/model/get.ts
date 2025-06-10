@@ -1,3 +1,4 @@
+import assert from "assert";
 import { FileManager } from "../utils/FileManager";
 
 export async function getAllNotes(): Promise<Note[]> {
@@ -22,8 +23,12 @@ export async function getAllNotes(): Promise<Note[]> {
 
 
 export async function getNote(uuid: string): Promise<Note> {
+
+    assert(!uuid.endsWith(".json"));
+    const fileName = `${uuid}.json`;
+
     try {
-        return await FileManager.read(uuid);
+        return await FileManager.read(fileName);
     }
     catch (err) {
         console.log(err);
