@@ -11,6 +11,7 @@ import {
   updateContext,
 } from "../backend/model/update";
 
+app.commandLine.appendSwitch('remote-debugging-port', '9222');
 const isDev = process.env.NODE_ENV === 'development';
 const rendererURL = 'http://localhost:3000';
 
