@@ -19,6 +19,7 @@ export default function Editor() {
     buttons: [
       "bold",
       "italic",
+      "underline",
       "|",
       "ul",
       "ol",
@@ -31,10 +32,16 @@ export default function Editor() {
       "|",
       "link",
       "image",
+      "source",
       "|",
       "undo",
       "redo",
     ],
+    uploader: { 
+      url: 'connector/index.php?action=upload',
+      insertImageAsBase64URI: true,
+      imagesExtensions: ['jpg', 'png', 'jpeg', 'gif']
+    }
   };
 
   return (
