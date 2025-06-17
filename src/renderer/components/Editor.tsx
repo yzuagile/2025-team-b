@@ -19,6 +19,8 @@ export default function Editor() {
     buttons: [
       "bold",
       "italic",
+      "Underline",
+      "strikethrough",
       "|",
       "ul",
       "ol",
