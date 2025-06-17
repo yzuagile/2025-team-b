@@ -19,6 +19,7 @@ export default function Editor() {
     buttons: [
       "bold",
       "italic",
+      "strikethrough",
       "|",
       "ul",
       "ol",
